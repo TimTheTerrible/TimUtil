@@ -6,7 +6,6 @@ package TimUtil;
 # - A system for generating and managing debug output
 # - A system for generating and managing error messages
 # - A system for parsing command line options with Getopt::Long
-# - A system for executing arbitrary commands locally or remotely, and capturing the exit code and output.
 #
 # Debugging
 # =========
@@ -117,39 +116,6 @@ package TimUtil;
 #
 # NOTE: TimUtil defines various default options. Please read the code for details.
 #
-# Command Exec Functions
-# ======================
-#
-# The remote_exec part of this tool depends on having ssh keys on both ends. It's not
-# particularly secure, as it was designed to be used on a closed network. The originating
-# process userid must have a public key, and the remote user must have it in their
-# authorized_keys file. If you don't know what this means, DO NOT USE THESE FUNCTIONS!!!
-#
-# This was not designed to be used for doing cray shit like running full-system backups.
-# If you need to do anything more complicated than "cat /etc/hosts", or "service nfs restart",
-# you should probably look elsewhere. Commands that produce lots of output will create a
-# huge local variable, and this might make your script run slow (in addition to making it
-# lame and sucky in general).
-#
-# To use these functions, create a few output containers and stick them in a hash with a command like so:
-#
-#    my $result = 0;
-#    my $output = [];
-#    my $rexec = {
-#        host => "remote_host",			# optional: only needed for remote_exec()
-#        cmd => "some_comamnd some_args",	# required (otherwise, what's the point?)
-#        # The following are optional:
-#        user => "remote_username",		# Defaults to "root" if no user is specified
-#        result => \$result,			# Supply a reference to a scalar, or nothing. If nothing, the return
-#                                               # code will be in $$exec{result} on return.
-#        output => $output,			# Same here as for retult: provide a reference to an empty list, or TimUtil
-#                                               # will create one and return a reference to it.
-#    };
-#
-# Call the function and, on return, $result will contain the POSIX exit code
-# and $output will be a list reference pointing to the output lines (if any) of the command.
-
-#
 # TODO: These things would make TimUtil even cooler.
 #
 # Paramter Management
@@ -161,9 +127,6 @@ package TimUtil;
 #  - Meta-flags such as DEBUG_TEST == DEBUG_ERROR & DEBUG_TRACE & DEBUG_DB; DEBUG_MOST == DEBUG_ALL ^ DEBUG_DUMP
 #
 # Error Message Management
-#
-# Command Execution
-#  - Validation of executable
 #
 
 use strict;
@@ -200,8 +163,6 @@ our @EXPORT = qw(
     E_HOST_UNAVAIL
     E_HOST_UNAVAILABLE
     @ErrorLog
-    remote_exec
-    local_exec
     PARAMTYPE_STRING
     PARAMTYPE_INT
     PARAMTYPE_FLOAT
@@ -742,123 +703,6 @@ sub enum_params
     else {
         return \%ParamDefs;
     }
-}
-
-#
-# Shell Execution Functions
-#
-
-use constant DEFAULT_USER	=> "root";
-
-sub remote_exec
-{
-    my ($exec) = @_;
-    my $returnval = E_NO_ERROR;
-
-    debugprint(DEBUG_TRACE, "Entering...");
-
-    $$exec{remote} = TRUE;
-
-    use Net::Ping;
-
-    my $pinger = Net::Ping->new();
-
-    if ( $pinger->ping($$exec{host}) ) {
-        $returnval = _exec($exec);
-    }
-    else {
-        $returnval = E_HOST_UNAVAILABLE;
-        debugprint(DEBUG_ERROR, "Host '%s' is not reachable!", $$exec{host});
-    }
-
-    $pinger->close();
-
-    no Net::Ping;
-
-    debugprint(DEBUG_TRACE, "Returning %s", error_message($returnval));
-
-    return $returnval;
-}
-
-sub local_exec
-{
-    my ($exec) = @_;
-    my $returnval = E_NO_ERROR;
-
-    debugprint(DEBUG_TRACE, "Entering...");
-
-    $$exec{remote} = FALSE;
-
-    $returnval = _exec($exec);
-
-    debugprint(DEBUG_TRACE, "Returning %s", error_message($returnval));
-
-    return $returnval;
-}
-
-sub _exec
-{
-    my ($exec) = @_;
-    my $returnval = E_NO_ERROR;
-
-    debugprint(DEBUG_TRACE, "Entering...");
-
-    # TODO: CAN'T DO THIS!!! It breaks URLs. :-(
-
-    # Clean up redundant slashes...
-    #$$exec{cmd} =~ s://:/:g while $$exec{cmd} =~ qw://:;
-
-    # Build the command line...
-    my $cmd;
-    if ( $$exec{remote} ) {
-        $cmd = sprintf("ssh %s@%s '%s'",
-            $$exec{user} ? $$exec{user} : DEFAULT_USER,
-            $$exec{host},
-            $$exec{cmd},
-        );
-    }
-    else {
-        $cmd = sprintf("%s", $$exec{cmd});
-    }
-
-    $cmd .= " &> /dev/null" if $$exec{quiet};
-
-    debugprint(DEBUG_TRACE, "cmd = %s", $cmd);
-
-    # TODO: make the executable check work on remote hosts too...
-    # Check to see if it's executable...
-    #my $exe = (split(' ', $$exec{cmd}))[0];
-    #if ( -x $exe ) {
-
-        # Execute the command, save the output...
-        @{$$exec{output}} = map( { chomp; $_; } qx($cmd) );
-        #$$exec{output} = () unless $$exec{output};
-
-        # Catch the POSIX return code...
-        my $result = $? >> 8;
-
-        # Did we get a ref?
-        if ( ref($$exec{result}) ) {
-
-            # Copy the local variable to the referenced scalar...
-            ${$$exec{result}} = $result;
-        }
-        else {
-
-            # Save the value of the local scalar...
-            $$exec{result} = $result;
-        }
-
-        debugprint(DEBUG_TRACE, "qx() returned %d", $$exec{result});
-    #}
-    #else {
-    #    debugprint(DEBUG_ERROR, "Command is not executable: '%s'", $exe);
-    #    $returnval = E_COMMAND_FAILED;
-    #}
-
-    debugprint(DEBUG_TRACE, "Returning %s", error_message($returnval));
-
-    return $returnval;
 }
 
 #

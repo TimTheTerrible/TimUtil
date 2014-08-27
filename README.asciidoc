@@ -5,6 +5,7 @@ A perl library that provides enhanced debug output and command-line argument par
 == Features
 * Debug Output Management
 * Command Line Argument Parsing
+* Custom error messages
 
 == Custom Error Messages
 
