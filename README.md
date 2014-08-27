@@ -15,6 +15,7 @@ Debug Output Management
 TimUtil allows the coder to define custom debug output classes:
 
 use constant DEBUG_FISH => 0x00100010;
+
 register_debug_mode(
 {
     (DEBUG_FISH)		=> {
@@ -31,7 +32,7 @@ debugprint(DEBUG_FISH, "The fish are swimming");
 The modes to be displayed are then
 specified on the command line:
 
-./myscript.pl --debug=info,warn,trace
+./test.pl --debug=fish
 
 main::main (154): The fish are swimming!
 
