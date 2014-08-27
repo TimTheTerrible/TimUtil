@@ -22,7 +22,7 @@ my %DebugModes = (
     (DEBUG_FISH)                => {
         name    => "fish",
         title   => "Fish",
-        comment => "Two Little Fishy",
+        comment => "Fish-handling messages",
     },
 );
 
