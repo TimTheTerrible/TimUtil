@@ -5,9 +5,8 @@ A perl library that provides enhanced debug output and command-line argument par
 
 Features
 ========
-
-Debug Output Management
-Command Line Argument Parsing
+* Debug Output Management
+* Command Line Argument Parsing
 
 Debug Output Management
 =======================
@@ -16,6 +15,7 @@ TimUtil allows the coder to define custom debug output classes:
 
 use constant DEBUG_FISH => 0x00100010;
 
+```perl
 register_debug_mode(
 {
     (DEBUG_FISH)		=> {
@@ -24,21 +24,24 @@ register_debug_mode(
         comment => "Two Little Fishy",
     },
 );
+```
 
 Calls to debugprint() specify the debug mode and the message:
 
 debugprint(DEBUG_FISH, "The fish are swimming");
 
-The modes to be displayed are then
-specified on the command line:
+The modes to be displayed are then specified on the command line:
 
+```perl
 ./test.pl --debug=fish
+```
 
 main::main (154): The fish are swimming!
 
 Command Line Argument Parsing
 =============================
 
+```perl
 my %ParamDefs = (
     "tuna" => {
         name	=> "Tuna",
@@ -48,3 +51,4 @@ my %ParamDefs = (
         comment	=> "The name of the fish",
     },
 );
+```
