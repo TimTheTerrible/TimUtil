@@ -66,10 +66,10 @@ The debug modes to be displayed are specified on the command line, along
 with named arguments:
 
 ```bash
-[tcurrie@heimdall TimUtil]$ ./test.pl --debug=all
+[tcurrie@heimdall TimUtil]$ ./test.pl --debug=all --tuna=Fred
 TimUtil::parse_args (696): Debug = all (4294967295)
 TimUtil::parse_args (698): Returning No Error
-main::main (49): the fish are swimming!
+main::main (49): The tuna's name is Fred
 **ERROR** main::main (50): Sorry, Charlie!
 ```
 

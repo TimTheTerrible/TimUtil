@@ -46,5 +46,5 @@ register_params(\%ParamDefs);
 
 parse_args();
 
-debugprint(DEBUG_FISH, "the fish are swimming!");
+debugprint(DEBUG_FISH, "The tuna's name is %s", $Tuna);
 debugprint(DEBUG_ERROR, error_message(E_INVALID_TUNA));
