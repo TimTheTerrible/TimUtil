@@ -28,7 +28,7 @@ NOTE: When creating the NAT_Monitor role, substitute the supplied IAM policy doc
 * Using the supplied template, create a root cron job to start the nat monitor on reboot
 * Start the monitor script
 
-NOTE: The simplest way to start the NAT monitor is to reboot the instance; the monitor will start automatically and assume its assigned role on startup. Alternatively, you could use ```at``` thusly:
+NOTE: The simplest way to start the NAT monitor is to reboot the instance; the monitor will start automatically and assume its assigned role on startup. Alternatively, you could use /usr/bin/at thusly:
 ```
 [root@vpc-nat-1a-primary ~]# at now
 at> /usr/local/sbin/nat_monitor.py >> /var/log/nat_monitor.log
