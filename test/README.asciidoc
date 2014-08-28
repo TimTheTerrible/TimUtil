@@ -24,9 +24,9 @@ Key instance setup tasks:
 NOTE: When creating the NAT_Monitor role, substitute the supplied IAM policy document when directed to create the policy. The supplied policy differs in that it also grants the instances the privilege to query and move the Elastic IP associated with the egress.
 
 == Installation
-# Copy nat_config.py and nat_monitor.py to /usr/local/sbin
-# Using the supplied template, create a root cron job to start the nat monitor on reboot
-# Start the monitor script
+* Copy nat_config.py and nat_monitor.py to /usr/local/sbin
+* Using the supplied template, create a root cron job to start the nat monitor on reboot
+* Start the monitor script
 
 NOTE: The simplest way to start the NAT monitor is to reboot the instance; the monitor will start automatically and assume its assigned role on startup. Alternatively, you could use ```at``` thusly:
 ```
