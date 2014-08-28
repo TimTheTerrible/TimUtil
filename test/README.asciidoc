@@ -8,12 +8,14 @@ https://aws.amazon.com/articles/2781451301784570
 Each availability zone requires two NAT instances. Choose an AMI that will be able to handle the expected traffic load. Configure the NAT instances according to the Amazon reference example.
 
 Key environment setup tasks:
+
 * Create the public and private subnets
 * Create the route for the private subnet
 * Create the NAT_Monitor IAM role
 * Reserve an Elastic IP for the egress IP
 
 Key instance setup tasks:
+
 * Disable source/destination checking
 * Enable auto-assigned public IPs
 * Enable IP Masquerading with iptables
