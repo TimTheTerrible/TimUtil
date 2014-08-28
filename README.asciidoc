@@ -22,7 +22,7 @@ my %ErrorMessages = (
 
 == Debug Output Management
 
-TimUtil allows the coder to define custom debug output classes: TimUtil allows the coder to define custom debug output classes: TimUtil allows the coder to define custom debug output classes: TimUtil allows the coder to define custom debug output classes:
+TimUtil allows the coder to define custom debug output classes:
 
 ```perl
 use constant DEBUG_FISH => 0x00100010;
