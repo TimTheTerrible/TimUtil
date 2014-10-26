@@ -155,6 +155,7 @@ our @EXPORT = qw(
     DEBUG_INFO
     DEBUG_ALL
     $Debug
+    $TestOnly
     register_error_messages
     register_error_message
     error_message
@@ -248,7 +249,7 @@ my %DefaultDebugModes = (
 );
 
 # Default Debug Mode...
-my $Debug = DEBUG_ERROR | DEBUG_WARN;
+our $Debug = DEBUG_ERROR | DEBUG_WARN;
 # $Debug = DEBUG_ALL ^ DEBUG_DUMP;
 # $Debug = DEBUG_ALL;
 
@@ -532,6 +533,8 @@ my %ParamTypes = (
 my @Params;
 my %ParamDefs = ();
 
+our $TestOnly = FALSE;
+
 my %DefaultParamDefs = (
     "debug"	=> {
         name	=> "Debug",
@@ -547,6 +550,13 @@ my %DefaultParamDefs = (
         funpack	=> \&help,
         usage	=> "--help|-h",
         comment	=> "Display this help",
+    },
+    "test"	=> {
+        name	=> "TestOnly",
+        type	=> PARAMTYPE_BOOL,
+        var	=> \$TestOnly,
+        usage	=> "--test|-t",
+        comment	=> "Invoke Test Mode. TestOnly is defined but unused by TimUtil.",
     },
 );
 
