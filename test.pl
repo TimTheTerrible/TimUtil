@@ -27,7 +27,12 @@ my %DebugModes = (
 );
 
 # Command line arguments
+use constant FOOD_NONE   => 0;
+use constant FOOD_WORMS  => 1;
+use constant FOOD_STEAK  => 2;
+
 our $Tuna = "Charlie";
+our $Food = FOOD_WORMS;
 
 my %ParamDefs = ( 
     "tuna" => {
@@ -36,6 +41,18 @@ my %ParamDefs = (
         var     => \$Tuna,
         usage   => "--tuna|-t",
         comment => "The name of the fish",
+    },
+    "food" => {
+        name    => "Food",
+        type    => PARAMTYPE_ENUM,
+        var     => \$Food,
+        usage   => "--food|-f",
+        comment => "The type of fish food",
+        selectors => {
+            none	=> FOOD_NONE,
+            worms	=> FOOD_WORMS,
+            steak	=> FOOD_STEAK,
+        },
     },
 );
 
