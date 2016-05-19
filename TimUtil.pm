@@ -250,8 +250,8 @@ my %DefaultDebugModes = (
 
 # Default Debug Mode...
 our $Debug = DEBUG_ERROR | DEBUG_WARN;
-# $Debug = DEBUG_ALL ^ DEBUG_DUMP;
-# $Debug = DEBUG_ALL;
+#$Debug = DEBUG_ALL ^ DEBUG_DUMP;
+#$Debug = DEBUG_ALL;
 
 #
 # Debug Mode Functions
@@ -568,15 +568,18 @@ sub register_params
 {
     my ($params) = @_;
 
+    my ($package,$filename,$line) = caller;
+
     foreach my $param ( keys(%{$params}) ) {
-        register_param($param, $$params{$param});
+        register_param($param, $$params{$param},$package);
     }
 }
 
 sub register_param
 {
-    my ($param,$paramdef) = @_;
+    my ($param,$paramdef,$package) = @_;
 
+    $$paramdef{package} = $package unless $$paramdef{package};
     debugdump(DEBUG_DUMP, $param, $paramdef);
 
     # No duplicate parameter names allowed...
@@ -677,8 +680,13 @@ sub help
 
     foreach my $param ( values(%ParamDefs) ) {
 
+        
         if ( $$param{usage} ne "" ) {
-            printf("\t%s %s\n", $$param{usage}, $ParamTypes{$$param{type}}{help});
+            printf("\t%s %s [Package %s]\n",
+                $$param{usage},
+                $$param{type} == PARAMTYPE_ENUM ? sprintf("<ENUM> (%s)", join(",", keys($$param{selectors}))) : $ParamTypes{$$param{type}}{help},
+                $$param{package});
+
         }
 
         if ( $$param{comment} ne "" ) {
