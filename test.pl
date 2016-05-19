@@ -31,6 +31,12 @@ use constant FOOD_NONE   => 0;
 use constant FOOD_WORMS  => 1;
 use constant FOOD_STEAK  => 2;
 
+my %Foods = (
+    (FOOD_NONE)		=> "nothing",
+    (FOOD_WORMS)	=> "worms",
+    (FOOD_STEAK)	=> "steak",
+);
+
 our $Tuna = "Charlie";
 our $Food = FOOD_WORMS;
 
@@ -64,6 +70,7 @@ register_params(\%ParamDefs);
 parse_args();
 
 debugprint(DEBUG_FISH, "The tuna's name is %s", $Tuna);
+debugprint(DEBUG_FISH, "He's hungrey for %s", $Foods{$Food});
 
 if ( $Tuna ne "Charlie" ) {
     debugprint(DEBUG_ERROR, error_message(E_INVALID_TUNA));
