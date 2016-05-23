@@ -251,7 +251,7 @@ my %DefaultDebugModes = (
 # Default Debug Mode...
 our $Debug = DEBUG_ERROR | DEBUG_WARN;
 #$Debug = DEBUG_ALL ^ DEBUG_DUMP;
-#$Debug = DEBUG_ALL;
+$Debug = DEBUG_ALL if $ENV{DEBUG_ALL};
 
 #
 # Debug Mode Functions
@@ -678,20 +678,36 @@ sub help
 {
     printf("Usage: %s [options]\n", $0);
 
-    foreach my $param ( values(%ParamDefs) ) {
+    # TODO: sort arguments by package...
+    my %params_by_package;
+    map( { $params_by_package{$ParamDefs{$_}{package}}{$_} = $ParamDefs{$_}; } keys(%ParamDefs) );
+    debugdump(DEBUG_DUMP, "params_by_package", \%params_by_package);
 
+    foreach my $package ( keys(%params_by_package) ) {
+
+        printf("\tParameters from %s:\n", $package);
+
+        foreach my $key ( keys($params_by_package{$package}) ) {
+            my $param = $params_by_package{$package}{$key};
+            debugdump(DEBUG_DUMP, "param", $param);
         
-        if ( $$param{usage} ne "" ) {
-            printf("\t%s %s [Package %s]\n",
-                $$param{usage},
-                $$param{type} == PARAMTYPE_ENUM ? sprintf("<ENUM> (%s)", join(",", keys($$param{selectors}))) : $ParamTypes{$$param{type}}{help},
-                $$param{package});
+            # Make up a default usage if none is provided...
+            $$param{usage} = sprintf("--%s | -%s", $key, substr($key, 0, 1)) if $$param{usage} eq "";
 
-        }
+            # Use the provided usage instructions...
+            my $help = $ParamTypes{$$param{type}}{help};
 
-        if ( $$param{comment} ne "" ) {
-            printf("\t\t%s\n", $$param{comment}, );
+            # Or provide argument type-specific usage instructions...
+            if ( $$param{type} == PARAMTYPE_ENUM ) {
+                $help = sprintf("<enum> [ %s ]", join(" | ", keys($$param{selectors})));
+            }
+
+            printf("\t%s %s\n", $$param{usage}, $help);
+
+            # Print the comment, if one is provided...
+            printf("\t\t%s\n", $$param{comment}) if $$param{comment} ne "";
         }
+        printf("\n");
     }
 
     exit(0);
