@@ -251,7 +251,10 @@ my %DefaultDebugModes = (
 # Default Debug Mode...
 our $Debug = DEBUG_ERROR | DEBUG_WARN;
 #$Debug = DEBUG_ALL ^ DEBUG_DUMP;
-#$Debug = DEBUG_ALL;
+
+# Debugging argument parsing requires that $Debug be set to DEBUG_ALL
+# before parse_args() is called, so look for an environment flag...
+$Debug = DEBUG_ALL if $ENV{DEBUG_ALL};
 
 #
 # Debug Mode Functions
