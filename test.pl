@@ -70,7 +70,7 @@ register_params(\%ParamDefs);
 parse_args();
 
 debugprint(DEBUG_FISH, "The tuna's name is %s", $Tuna);
-debugprint(DEBUG_FISH, "He's hungrey for %s", $Foods{$Food});
+debugprint(DEBUG_FISH, "He's hungry for %s", $Foods{$Food});
 
 if ( $Tuna ne "Charlie" ) {
     debugprint(DEBUG_ERROR, error_message(E_INVALID_TUNA));
