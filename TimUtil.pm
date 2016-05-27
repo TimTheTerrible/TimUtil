@@ -213,6 +213,7 @@ use constant DEBUG_DUMP		=> 0x80000000;
 use constant DEBUG_INFO		=> 0x01000000;
 use constant DEBUG_RESERVED	=> 0xFFFFFF00;
 use constant DEBUG_ALL		=> 0xFFFFFFFF;
+use constant DEBUG_EXPLICIT	=> 1;
 
 my %DebugFlags = ();
 my %DebugNames = ();
@@ -337,11 +338,13 @@ sub debug_flags
 
 sub debug_names
 {
-    my ($flags) = @_;
+    my ($flags,$explicit) = @_;
     my $result;
 
     # If it's all just say all...
-    return "all" if ($flags & DEBUG_ALL) == DEBUG_ALL;
+    if ( ($flags & DEBUG_ALL) == DEBUG_ALL and ($explicit != DEBUG_EXPLICIT) ) {
+        return "all";
+    }
 
     # Iterate over all registered modes...
     foreach my $mode ( keys(%DebugNames) ) {
@@ -678,7 +681,7 @@ sub help
 {
     printf("Usage: %s [options]\n", $0);
 
-    # TODO: sort arguments by package...
+    # Sort arguments by package...
     my %params_by_package;
     map( { $params_by_package{$ParamDefs{$_}{package}}{$_} = $ParamDefs{$_}; } keys(%ParamDefs) );
     debugdump(DEBUG_DUMP, "params_by_package", \%params_by_package);
@@ -700,6 +703,9 @@ sub help
             # Or provide argument type-specific usage instructions...
             if ( $$param{type} == PARAMTYPE_ENUM ) {
                 $help = sprintf("<enum> [ %s ]", join(" | ", keys($$param{selectors})));
+            }
+            elsif ( $$param{name} eq "Debug" ) {
+                $help = sprintf("<flags> [ %s ]", debug_names(DEBUG_ALL, DEBUG_EXPLICIT));
             }
 
             printf("\t%s %s\n", $$param{usage}, $help);
