@@ -7,3 +7,6 @@ install:
 
 test:
 	perl -I . ./test.pl --debug=all --help
+
+diff:
+	diff ${TARGET} ${PERLDIR}/${TARGET}
