@@ -691,6 +691,7 @@ sub help
         printf("\tParameters from %s:\n", $package);
 
         foreach my $key ( keys($params_by_package{$package}) ) {
+
             my $param = $params_by_package{$package}{$key};
             debugdump(DEBUG_DUMP, "param", $param);
         
