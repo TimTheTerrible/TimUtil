@@ -559,7 +559,7 @@ my %DefaultParamDefs = (
         type	=> PARAMTYPE_BOOL,
         var	=> \$TestOnly,
         usage	=> "--test|-t",
-        comment	=> "Invoke Test Mode. TestOnly is defined but unused by TimUtil.",
+        comment	=> "Sets \$TimUtil::TestOnly to TRUE. TestOnly is defined but unused by TimUtil.",
     },
 );
 
