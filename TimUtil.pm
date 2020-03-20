@@ -406,6 +406,7 @@ sub debugdump
     if ( ($Debug & $flag) == $flag ) {
         use Data::Dumper;
         $Data::Dumper::Terse = FALSE;
+        $Data::Dumper::Indent = 1;
         printf(STDERR "%s (%s): %s",
             $caller_name ? $caller_name : "main::main",
             $line, Data::Dumper->Dump([$ref],[$name]));
