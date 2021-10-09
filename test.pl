@@ -63,15 +63,20 @@ my %ParamDefs = (
 );
 
 # Example
-register_error_messages(\%ErrorMessages);
-register_debug_modes(\%DebugModes);
-register_params(\%ParamDefs);
+{
+    register_error_messages(\%ErrorMessages);
+    register_debug_modes(\%DebugModes);
+    register_params(\%ParamDefs);
 
-parse_args();
+    parse_args();
 
-debugprint(DEBUG_FISH, "The tuna's name is %s", $Tuna);
-debugprint(DEBUG_FISH, "He's hungry for %s", $Foods{$Food});
+    debugprint(DEBUG_FISH, "The tuna's name is %s", $Tuna);
+    debugprint(DEBUG_FISH, "He's hungry for %s", $Foods{$Food});
 
-if ( $Tuna ne "Charlie" ) {
-    debugprint(DEBUG_ERROR, error_message(E_INVALID_TUNA));
+    if ( $Tuna ne "Charlie" ) {
+        debugprint(DEBUG_ERROR, error_message(E_INVALID_TUNA));
+    }
+
+    debugtrace(DEBUG_TRACE, qx(cat /etc/hosts));
 }
+
