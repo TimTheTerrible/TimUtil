@@ -147,6 +147,7 @@ our @EXPORT = qw(
     debug_names
     debugprint
     debugdump
+    debugtrace
     DEBUG_NONE
     DEBUG_ERROR
     DEBUG_WARN
@@ -411,6 +412,31 @@ sub debugdump
             $caller_name ? $caller_name : "main::main",
             $line, Data::Dumper->Dump([$ref],[$name]));
         no Data::Dumper;
+    }
+}
+
+sub debugtrace
+{
+    my ($flag,@input) = @_;
+
+    my ($package,$filename,$line) = caller;
+    my ($blah1,$blah2,$blah6,$subroutine,$hasargs,$wantarray) = caller(1);
+
+    if ( ($Debug & $flag) == $flag ) {
+
+        foreach my $row ( @input ) {
+
+            no warnings;
+            chomp($row);
+            my $output = sprintf("%s%s (%s): %s\n",
+                (DEBUG_ERROR & $flag) ? "**ERROR** ":"",
+                $subroutine ne "" ? $subroutine : "main::main",
+                $line,
+                $row,
+            );
+            printf(STDERR $output);
+            use warnings;
+        }        
     }
 }
 
@@ -691,7 +717,7 @@ sub help
 
         printf("\tParameters from %s:\n", $package);
 
-        foreach my $key ( keys($params_by_package{$package}) ) {
+        foreach my $key ( keys(%{$params_by_package{$package}}) ) {
 
             my $param = $params_by_package{$package}{$key};
             debugdump(DEBUG_DUMP, "param", $param);
@@ -704,7 +730,7 @@ sub help
 
             # Or provide argument type-specific usage instructions...
             if ( $$param{type} == PARAMTYPE_ENUM ) {
-                $help = sprintf("<enum> [ %s ]", join(" | ", keys($$param{selectors})));
+                $help = sprintf("<enum> [ %s ]", join(" | ", keys(%{$$param{selectors}})));
             }
             elsif ( $$param{name} eq "Debug" ) {
                 $help = sprintf("<flags> [ %s ]", debug_names(DEBUG_ALL, DEBUG_EXPLICIT));
