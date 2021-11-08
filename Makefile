@@ -1,5 +1,6 @@
 PERLDIR=/usr/local/lib64/perl5
 TARGET=TimUtil.pm
+BUILDDIR="build"
 
 install:
 	mkdir -p ${PERLDIR}; \
@@ -10,3 +11,10 @@ test:
 
 diff:
 	diff ${TARGET} ${PERLDIR}/${TARGET}
+
+clean:
+	rm -vrf ${BUILDDIR}
+
+package:
+	rpmbuild -ba TimUtil.spec
+
