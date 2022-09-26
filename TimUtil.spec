@@ -5,6 +5,7 @@ Summary:	Tim Currie's awesome Perl utility module
 
 Group:		tools
 License:	GPL
+BuildArch:  noarch
 
 %description
 Tim Currie's personal Perl utility library
