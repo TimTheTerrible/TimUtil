@@ -1,6 +1,6 @@
 Name:		TimUtil
 Version:	2.6
-Release:	1%{?dist}
+Release:	3%{?dist}
 Summary:	Tim Currie's awesome Perl utility module
 
 Group:		tools
@@ -25,12 +25,14 @@ git clone git@github.com:TimTheTerrible/TimUtil.git
 
 %install
 
-mkdir -p %{buildroot}/usr/local/lib64/perl5/
-install -m 755 TimUtil/TimUtil.pm %{buildroot}/usr/local/lib64/perl5/
+mkdir -p %{buildroot}/usr/local/lib64/perl5/vendor_perl/
+install -m 755 TimUtil/TimUtil.pm %{buildroot}/usr/local/lib64/perl5/vendor_perl/
 
 %files
 
-/usr/local/lib64/perl5/*
+/usr/local/lib64/perl5/vendor_perl/TimUtil.pm
 
 %changelog
+* Mon Jun 09 2025 Tim Currie <tim@dforge.cc>
+- Fixed Perl path
 
